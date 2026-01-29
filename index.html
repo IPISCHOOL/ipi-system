@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPI - ระบบจัดการสถาบันเตรียมพร้อมเชิงบูรณาการ</title>
+    <meta name="description" content="ระบบจัดการสถาบันเตรียมพร้อมเชิงบูรณาการ Integrated Preparatory Institute">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+        <div class="stars3"></div>
+    </div>
+
+    <!-- ============ ROLE SELECTION SCREEN ============ -->
+    <div id="roleScreen" class="screen active">
+        <div class="container role-container">
+            <div class="logo-header">
+                <img src="assets/logo.png" alt="IPI Logo" class="school-logo">
+                <h1 class="school-name">สถาบันเตรียมพร้อมเชิงบูรณาการ</h1>
+                <p class="school-name-en">Integrated Preparatory Institute (IPI)</p>
+            </div>
+
+            <h2 class="section-title">เลือกประเภทผู้ใช้งาน</h2>
+
+            <div class="role-cards">
+                <div class="role-card" data-role="internal" onclick="selectRole('internal')">
+                    <div class="role-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3>บุคคลภายใน</h3>
+                    <p>สำหรับบุคลากรภายในสถาบัน</p>
+                    <div class="card-glow"></div>
+                </div>
+
+                <div class="role-card" data-role="admin" onclick="selectRole('admin')">
+                    <div class="role-icon admin-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>ผู้บริหาร</h3>
+                    <p>สำหรับผู้บริหารและผู้ดูแลระบบ</p>
+                    <div class="card-glow admin-glow"></div>
+                </div>
+
+                <div class="role-card" data-role="parent" onclick="selectRole('parent')">
+                    <div class="role-icon parent-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>ผู้ปกครอง</h3>
+                    <p>สำหรับผู้ปกครองนักเรียน</p>
+                    <div class="card-glow parent-glow"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ LOGIN SCREEN ============ -->
+    <div id="loginScreen" class="screen">
+        <div class="container login-container">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> กลับ
+            </button>
+
+            <div class="login-card">
+                <div class="logo-header small">
+                    <img src="assets/logo.png" alt="IPI Logo" class="school-logo small">
+                    <h2 id="loginTitle">เข้าสู่ระบบ</h2>
+                    <p id="loginSubtitle" class="role-badge">บุคคลภายใน</p>
+                </div>
+
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="username">
+                            <i class="fas fa-user"></i> ชื่อผู้ใช้
+                        </label>
+                        <input type="text" id="username" name="username" placeholder="ป้อนชื่อผู้ใช้" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i> รหัสผ่าน
+                        </label>
+                        <div class="password-input">
+                            <input type="password" id="password" name="password" placeholder="ป้อนรหัสผ่าน" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword()">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    
+
+                    <div id="errorMessage" class="error-message hidden">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>ชื่อหรือรหัสผ่านไม่ถูกต้อง</span>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            จำข้อมูลการล็อกอินไว้
+                        </label>
+                    </div>
+
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ DASHBOARD SCREEN ============ -->
+    <div id="dashboardScreen" class="screen">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <img src="assets/logo.png" alt="IPI" class="nav-logo">
+                <span>สถาบันเตรียมพร้อมเชิงบูรณาการ</span>
+            </div>
+            <div class="nav-user">
+                <span id="welcomeUser">ยินดีต้อนรับ, <strong id="currentUserName">ผู้ใช้</strong></span>
+                <span id="userRoleBadge" class="user-role-badge">บุคคลภายใน</span>
+            </div>
+            <div class="nav-actions">
+                <button class="nav-btn" onclick="openModule('profile')">
+                    <i class="fas fa-user-circle"></i> โปรไฟล์
+                </button>
+                <button class="nav-btn" onclick="openChangePassword()">
+                    <i class="fas fa-key"></i> เปลี่ยนรหัสผ่าน
+                </button>
+                <button class="nav-btn logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+                </button>
+            </div>
+        </nav>
+
+        <div class="dashboard-content">
+            <div class="dashboard-header">
+                <h1>แดชบอร์ด</h1>
+                <p>ระบบจัดการสถาบันเตรียมพร้อมเชิงบูรณาการ</p>
+            </div>
+
+            <div class="menu-grid">
+                <div class="menu-card" onclick="openModule('training')">
+                    <div class="menu-icon training">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <h3>รายงานการเข้าฝึกซ้อม</h3>
+                    <p>ตรวจสอบการเข้าฝึกซ้อมประจำสัปดาห์</p>
+                </div>
+
+                <div class="menu-card" onclick="openModule('violation')">
+                    <div class="menu-icon violation">
+                        <i class="fas fa-gavel"></i>
+                    </div>
+                    <h3>รายงานการทำผิดกฎ</h3>
+                    <p>ดูคะแนนความดีและความประพฤติ</p>
+                </div>
+
+                <div class="menu-card" onclick="openModule('members')">
+                    <div class="menu-icon members">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <h3>รายงานสมาชิก</h3>
+                    <p>จัดการข้อมูลสมาชิกทั้งหมด</p>
+                </div>
+
+                <div class="menu-card" onclick="openModule('activity')">
+                    <div class="menu-icon activity">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <h3>รายงานเช็คชื่อกิจกรรม</h3>
+                    <p>บันทึกการเข้าร่วมกิจกรรมรายวัน</p>
+                </div>
+
+                <div class="menu-card" onclick="openModule('clubs')">
+                    <div class="menu-icon clubs">
+                        <i class="fas fa-people-group"></i>
+                    </div>
+                    <h3>รายชื่อชมรมและผู้ดูแล</h3>
+                    <p>ดูข้อมูลชมรมและผู้รับผิดชอบ</p>
+                </div>
+
+                <div class="menu-card" onclick="openModule('appeal')">
+                    <div class="menu-icon appeal">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h3>ร้องขอคะแนนคืน</h3>
+                    <p>ขอคืนคะแนนที่ถูกหัก</p>
+                </div>
+
+                <div class="menu-card director-only" id="directorPanel" onclick="openModule('director')">
+                    <div class="menu-icon director">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3>ศูนย์ผู้อำนวยการ</h3>
+                    <p>อนุมัติคะแนนและคำร้อง</p>
+                </div>
+
+                <div class="menu-card admin-only" id="adminPanel" onclick="openModule('admin')">
+                    <div class="menu-icon admin">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>จัดการผู้ใช้ระบบ</h3>
+                    <p>เพิ่ม/ลบผู้ใช้งาน (เฉพาะผู้บริหาร)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MODULE SCREENS ============ -->
+
+    <!-- Profile Module -->
+    <div id="profileModule" class="screen module-screen">
+        <nav class="module-nav">
+            <button class="back-btn" onclick="backToDashboard()">
+                <i class="fas fa-home"></i> กลับหน้าหลัก
+            </button>
+            <div class="nav-spacer"></div>
+            <h2><i class="fas fa-user-circle"></i> ข้อมูลบัญชีผู้ใช้</h2>
+        </nav>
+        <div class="module-content">
+            <!-- Profile View -->
+            <div id="profileView" class="profile-container">
+                <div class="profile-card">
+                    <div class="profile-avatar" id="profileAvatarDisplay">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="profileName">ชื่อผู้ใช้</h2>
+                        <span class="profile-position" id="profilePosition">ตำแหน่ง</span>
+                        <span class="profile-role" id="profileRole">บุคคลภายใน</span>
+                    </div>
+                </div>
+
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <i class="fas fa-user"></i>
+                        <div class="detail-content">
+                            <label>ชื่อ-นามสกุล</label>
+                            <span id="detailName">-</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-id-badge"></i>
+                        <div class="detail-content">
+                            <label>ชื่อผู้ใช้ (Username)</label>
+                            <span id="detailUsername">-</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-briefcase"></i>
+                        <div class="detail-content">
+                            <label>ตำแหน่ง</label>
+                            <span id="detailPosition">-</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-building"></i>
+                        <div class="detail-content">
+                            <label>แผนก/ฝ่าย</label>
+                            <span id="detailDepartment">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="edit-profile-btn" onclick="showEditProfile()">
+                    <i class="fas fa-camera"></i> เปลี่ยนรูปโปรไฟล์
+                </button>
+            </div>
+
+            <!-- Profile Edit Form (Avatar Only) -->
+            <div id="profileEdit" class="profile-container hidden">
+                <h3 class="section-title"><i class="fas fa-camera"></i> เปลี่ยนรูปโปรไฟล์</h3>
+
+                <form id="editProfileForm" onsubmit="saveProfile(event)">
+                    <div class="profile-avatar-edit">
+                        <div class="avatar-preview" id="avatarPreview">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <label class="avatar-upload-btn">
+                            <i class="fas fa-camera"></i> เลือกรูปภาพ
+                            <input type="file" id="avatarInput" accept="image/*" onchange="previewAvatar(this)"
+                                style="display:none">
+                        </label>
+                        <p class="avatar-hint">รองรับไฟล์ PNG, JPG, GIF</p>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" onclick="cancelEditProfile()">
+                            <i class="fas fa-times"></i> ยกเลิก
+                        </button>
+                        <button type="submit" class="save-btn">
+                            <i class="fas fa-save"></i> บันทึก
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Training Report Module -->
+    <div id="trainingModule" class="screen module-screen">
+        <nav class="module-nav">
+            <button class="back-btn" onclick="backToDashboard()">
+                <i class="fas fa-home"></i> กลับหน้าหลัก
+            </button>
+            <h2>รายงานการเข้าฝึกซ้อม ของ <span id="trainingUserName">ชื่อผู้ใช้</span></h2>
+        </nav>
+        <div class="module-content">
+            <!-- Training Menu -->
+            <div id="trainingMenu" class="training-menu-grid">
+                <div class="training-menu-card" onclick="showTrainingHistory()">
+                    <div class="training-menu-icon history-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3>ประวัติการฝึกซ้อม</h3>
+                    <p>ดูรายการรายงานการฝึกซ้อมทั้งหมด</p>
+                </div>
+                <div class="training-menu-card" onclick="startTrainingReport()">
+                    <div class="training-menu-icon report-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>กรอกข้อมูลรายงาน</h3>
+                    <p>รายงานการฝึกซ้อมใหม่ (Before/After)</p>
+                </div>
+            </div>
+
+            <!-- Training History Section -->
+            <div id="trainingHistorySection" class="hidden">
+                <button class="section-back-btn" onclick="backToTrainingMenu()">
+                    <i class="fas fa-arrow-left"></i> กลับเมนู
+                </button>
+                <h3><i class="fas fa-history"></i> ประวัติการฝึกซ้อม</h3>
+                <div class="training-table-container">
+                    <table class="training-table" id="trainingHistoryTable">
+                        <thead>
+                            <tr>
+                                <th>ที่</th>
+                                <th>วันที่</th>
+                                <th>เวลา</th>
+                                <th>หัวข้อ</th>
+                                <th>รูป Before</th>
+                                <th>รูป After</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trainingHistoryBody">
+                            <!-- Dynamic content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Training Report Form Section -->
+            <div id="trainingReportSection" class="hidden">
+                <button class="section-back-btn" onclick="backToTrainingMenu()">
+                    <i class="fas fa-arrow-left"></i> กลับเมนู
+                </button>
+
+                <!-- Step Indicator -->
+                <div class="step-indicator">
+                    <div class="step active" id="step1">
+                        <span class="step-number">1</span>
+                        <span class="step-text">Before</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" id="step2">
+                        <span class="step-number">2</span>
+                        <span class="step-text">After</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" id="step3">
+                        <span class="step-number">3</span>
+                        <span class="step-text">ยืนยัน</span>
+                    </div>
+                </div>
+
+                <!-- Before Form -->
+                <div id="beforeForm" class="training-form-section">
+                    <h3><i class="fas fa-clock"></i> ก่อนฝึกซ้อม (Before)</h3>
+                    <div class="auto-datetime">
+                        <i class="fas fa-calendar"></i>
+                        <span id="beforeDate"></span>
+                        <span id="beforeTime"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>หัวข้อการฝึก</label>
+                        <input type="text" id="trainingTitle" placeholder="เช่น ซ้อมดนตรี, ซ้อมกีฬา" required>
+                    </div>
+                    <div class="form-group">
+                        <label>รูปภาพก่อนฝึก</label>
+                        <div class="image-upload-area" onclick="document.getElementById('beforeImage').click()">
+                            <div id="beforeImagePreview" class="image-preview">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>คลิกเพื่อเลือกรูปภาพ</p>
+                            </div>
+                        </div>
+                        <input type="file" id="beforeImage" accept="image/*" style="display:none"
+                            onchange="previewImage(this, 'beforeImagePreview')">
+                    </div>
+                    <button class="submit-btn" onclick="goToAfterStep()">
+                        <i class="fas fa-arrow-right"></i> ส่งและไปต่อ
+                    </button>
+                </div>
+
+                <!-- After Form -->
+                <div id="afterForm" class="training-form-section hidden">
+                    <h3><i class="fas fa-check-circle"></i> หลังฝึกซ้อม (After)</h3>
+                    <div class="auto-datetime">
+                        <i class="fas fa-calendar"></i>
+                        <span id="afterDate"></span>
+                        <span id="afterTime"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>รูปภาพหลังฝึก</label>
+                        <div class="image-upload-area" onclick="document.getElementById('afterImage').click()">
+                            <div id="afterImagePreview" class="image-preview">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>คลิกเพื่อเลือกรูปภาพ</p>
+                            </div>
+                        </div>
+                        <input type="file" id="afterImage" accept="image/*" style="display:none"
+                            onchange="previewImage(this, 'afterImagePreview')">
+                    </div>
+                    <button class="submit-btn" onclick="goToConfirmStep()">
+                        <i class="fas fa-arrow-right"></i> ส่งและยืนยัน
+                    </button>
+                </div>
+
+                <!-- Confirmation Step -->
+                <div id="confirmForm" class="training-form-section hidden">
+                    <h3><i class="fas fa-check-double"></i> ยืนยันข้อมูล</h3>
+                    <div class="confirm-summary">
+                        <div class="confirm-item">
+                            <span class="confirm-label">หัวข้อ:</span>
+                            <span id="confirmTitle" class="confirm-value"></span>
+                        </div>
+                        <div class="confirm-images">
+                            <div class="confirm-image-box">
+                                <h4>Before</h4>
+                                <img id="confirmBeforeImage" src="" alt="Before">
+                            </div>
+                            <div class="confirm-image-box">
+                                <h4>After</h4>
+                                <img id="confirmAfterImage" src="" alt="After">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="confirm-buttons">
+                        <button class="cancel-btn" onclick="resetTrainingForm()">
+                            <i class="fas fa-times"></i> ยกเลิก
+                        </button>
+                        <button class="submit-btn" onclick="submitTrainingReport()">
+                            <i class="fas fa-check"></i> ยืนยันและบันทึก
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Violation Report Module -->
+    <div id="violationModule" class="screen module-screen">
+        <nav class="module-nav">
+            <button class="back-btn" onclick="backToDashboard()">
+                <i class="fas fa-home"></i> กลับหน้าหลัก
+            </button>
+            <h2>รายงานการผิดกฎ ของ <span id="violationUserName">ชื่อผู้ใช้</span></h2>
+        </nav>
+        <div class="module-content">
+            <div class="score-summary">
+                <div class="score-card good">
+                    <h3>คะแนนความดี</h3>
+                    <span id="goodScore">+0</span> คะแนน
+                </div>
+                <div class="score-card bad">
+                    <h3>หักคะแนนพฤติกรรม</h3>
+                    <span id="badScore">0</span> คะแนน
+                </div>
+                <div class="score-card total">
+                    <h3>คะแนนรวม</h3>
+                    <span id="totalScore">0</span> คะแนน
+                </div>
+            </div>
+            <div class="report-tabs">
+                <button class="tab-btn active" onclick="switchTab('good')">รายงานความดี</button>
+                <button class="tab-btn" onclick="switchTab('bad')">รายงานความประพฤติ</button>
+            </div>
+            <div class="report-table-container">
+                <table class="report-table" id="violationTable">
+                    <thead>
+                        <tr>
+                            <th>ที่</th>
+                            <th>รายละเอียด</th>
+                            <th>คะแนน</th>
+                            <th>วันที่</th>
+                        </tr>
+                    </thead>
+                    <tbody id="violationBody">
+                        <!-- Dynamic content -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Members Module -->
+    <div id="membersModule" class="screen module-screen">
+        <nav class="module-nav">
+            <button class="back-btn" onclick="backToDashboard()">
+                <i class="fas fa-home"></i> กลับหน้าหลัก
+            </button>
+            <div class="nav-spacer"></div>
+            <h2>รายงานสมาชิก (บุคคลภายใน)</h2>
+        </nav>
+        <div class="module-content">
+            <div class="member-list-container">
+                <h3><i class="fas fa-users"></i> รายชื่อบุคลากรภายใน</h3>
+                <p class="section-info">คลิกที่ชื่อเพื่อดูรายละเอียดเพิ่มเติม</p>
+                <table class="member-table" id="memberTable">
+                    <thead>
+                        <tr>
+                            <th>ที่</th>
+                            <th>ชื่อผู้ใช้</th>
+                            <th>ชื่อจริง</th>
+                            <th>สถานะ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="memberBody">
+                        <!-- Dynamic content -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Detail Modal -->
+    <div id="memberDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user"></i> รายละเอียดสมาชิก</h3>
+                <button class="close-btn" onclick="closeModal('memberDetailModal')">&times;</button>
+            </div>
+            <div class="member-detail-content">
+                <div class="detail-row">
+                    <span class="detail-label">ชื่อผู้ใช้:</span>
+                    <span id="detailUsername" class="detail-value"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">ชื่อจริง:</span>
+                    <span id="detailRealName" class="detail-value"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">บทบาท:</span>
+                    <span id="detailRole" class="detail-value role-badge">บุคคลภายใน</span>
+                </div>
+                <div class="score-detail-section">
+                    <h4><i class="fas fa-star"></i> คะแนน</h4>
+                    <div class="score-detail-grid">
+                        <div class="score-detail-card good">
+                            <span class="score-label">คะแนนบวก</span>
+                            <span id="detailGoodScore" class="score-value">+0</span>
+                        </div>
+                        <div class="score-detail-card bad">
+                            <span class="score-label">คะแนนลบ</span>
+                            <span id="detailBadScore" class="score-value">0</span>
+                        </div>
+                        <div class="score-detail-card total">
+                            <span class="score-label">รวมทั้งหมด</span>
+                            <span id="detailTotalScore" class="score-value">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Check-in Module -->
+    <div id="activityModule" class="screen module-screen">
+        <nav class="module-nav">
+            <button class="back-btn" onclick="backToDashboard()">
+                <i class="fas fa-home"></i> กลับหน้าหลัก
+            </button>
+            <h2>รายงานเช็คชื่อกิจกรรม</h2>
+        </nav>
+        <div class="module-content">
+            <div class="activity-controls">
+                <div class="month-selector">
+                    <button onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                    <span id="currentMonth">มกราคม 2569</span>
+                    <button onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="activity-table-container">
+                <table class="activity-table" id="activityTable">
+                    <thead>
+                        <tr id="activityHeader">
+                            <th>ชื่อ-นามสกุล</th>
+                            <!-- Dynamic dates -->
+                        </tr>
+                    </thead>
+                    <tbody id="activityBody">
+                        <!-- Dynamic content -->
+                    </tbody>
+                </table>
+            </div>
+            <button class="save-btn" onclick="saveActivity()">
+                <i class="fas fa-save"></i> บันทึกข้อมูล
+            </button>
+        </div>
+    </div>
+
+    <!-- Clubs Module -->
+    <div id="clubsModule" class="screen module-screen">
+        <nav class="module-nav">
+            <button class="back-btn" onclick="backToDashboard()">
+                <i class="fas fa-home"></i> กลับหน้าหลัก
+            </button>
+            <h2>รายชื่อชมรมและผู้ดูแล</h2>
+        </nav>
+        <div class="module-content">
+            <div class="clubs-grid" id="clubsGrid">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Module -->
+    <div id="adminModule" class="screen module-screen">
+        <nav class="module-nav">
+            <button class="back-btn" onclick="backToDashboard()">
+                <i class="fas fa-home"></i> กลับหน้าหลัก
+            </button>
+            <div class="nav-spacer"></div>
+            <h2>ศูนย์จัดการระบบ (Admin)</h2>
+        </nav>
+        <div class="module-content">
+            <!-- Admin Main Menu -->
+            <div id="adminMainMenu" class="admin-menu-grid">
+                <div class="admin-menu-card" onclick="openAdminSection('users')">
+                    <div class="admin-menu-icon users-icon">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <h3>จัดการผู้ใช้ระบบ</h3>
+                    <p>เพิ่ม/ลบผู้ใช้งาน</p>
+                </div>
+                <div class="admin-menu-card" onclick="openAdminSection('scores')">
+                    <div class="admin-menu-icon scores-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>จัดการคะแนน</h3>
+                    <p>เพิ่ม/ลบคะแนนความดี-ความประพฤติ</p>
+                </div>
+                <div class="admin-menu-card" onclick="openAdminSection('members')">
+                    <div class="admin-menu-icon members-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>จัดการสมาชิก</h3>
+                    <p>เพิ่ม/ลบ/แก้ไขรายชื่อสมาชิก</p>
+                </div>
+                <div class="admin-menu-card" onclick="openAdminSection('training')">
+                    <div class="admin-menu-icon training-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>จัดการการฝึกซ้อม</h3>
+                    <p>แก้ไขข้อมูลการเข้าฝึกซ้อม</p>
+                </div>
+                <div class="admin-menu-card" onclick="openAdminSection('clubs')">
+                    <div class="admin-menu-icon clubs-icon">
+                        <i class="fas fa-people-group"></i>
+                    </div>
+                    <h3>จัดการชมรม</h3>
+                    <p>เพิ่ม/ลบ/แก้ไขชมรม</p>
+                </div>
+                <div class="admin-menu-card" onclick="openAdminSection('director')">
+                    <div class="admin-menu-icon director-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3>แต่งตั้งผู้อำนวยการ</h3>
+                    <p>มอบสิทธิ์ผู้อำนวยการ</p>
+                </div>
+                <div class="admin-menu-card" onclick="openAdminSection('profiles')">
+                    <div class="admin-menu-icon profile-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <h3>จัดการโปรไฟล์ผู้ใช้</h3>
+                    <p>แก้ไขชื่อ ตำแหน่ง แผนก</p>
+                </div>
+                <div class="admin-menu-card" onclick="clearAllData()">
+                    <div class="admin-menu-icon danger-icon">
+                        <i class="fas fa-trash-alt"></i>
+                    </div>
+                    <h3>ล้างข้อมูลทั้งหมด</h3>
+                    <p>รีเซ็ตระบบเป็นค่าเริ่มต้น</p>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div id="adminUsersSection" class="admin-section hidden">
+                <button class="section-back-btn" onclick="backToAdminMenu()">
+                    <i class="fas fa-arrow-left"></i> กลับเมนูหลัก
+                </button>
+                <h3><i class="fas fa-users-cog"></i> จัดการผู้ใช้ระบบ</h3>
+                <div class="admin-tabs">
+                    <button class="admin-tab-btn active" onclick="switchAdminTab('internal')">บุคคลภายใน</button>
+                    <button class="admin-tab-btn" onclick="switchAdminTab('admin')">ผู้บริหาร</button>
+                    <button class="admin-tab-btn" onclick="switchAdminTab('parent')">ผู้ปกครอง</button>
+                </div>
+                <div class="admin-form-container">
+                    <h4><i class="fas fa-user-plus"></i> เพิ่มผู้ใช้ใหม่</h4>
+                    <form id="addUserForm" onsubmit="addUser(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>ชื่อผู้ใช้</label>
+                                <input type="text" id="newUsername" required>
+                            </div>
+                            <div class="form-group">
+                                <label>รหัสผ่าน</label>
+                                <input type="text" id="newPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ชื่อจริง</label>
+                                <input type="text" id="newRealName" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-plus"></i> เพิ่มผู้ใช้
+                        </button>
+                    </form>
+                </div>
+                <div class="user-list-container">
+                    <h4><i class="fas fa-users"></i> รายชื่อผู้ใช้</h4>
+                    <table class="user-table" id="userTable">
+                        <thead>
+                            <tr>
+                                <th>ที่</th>
+                                <th>ชื่อผู้ใช้</th>
+                                <th>รหัสผ่าน</th>
+                                <th>ชื่อจริง</th>
+                                <th>การจัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Scores Section -->
+            <div id="adminScoresSection" class="admin-section hidden">
+                <button class="section-back-btn" onclick="backToAdminMenu()">
+                    <i class="fas fa-arrow-left"></i> กลับเมนูหลัก
+                </button>
+                <h3><i class="fas fa-star"></i> จัดการคะแนน</h3>
+                <div class="admin-tabs">
+                    <button class="admin-tab-btn active" onclick="switchScoreTab('good')">คะแนนความดี</button>
+                    <button class="admin-tab-btn" onclick="switchScoreTab('bad')">คะแนนลบ</button>
+                </div>
+                <div class="admin-form-container">
+                    <h4><i class="fas fa-plus-circle"></i> เพิ่มคะแนนใหม่ (รอการอนุมัติจากผู้อำนวยการ)</h4>
+                    <form id="addScoreForm" onsubmit="submitScoreRequest(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>เลือกสมาชิก</label>
+                                <select id="scoreMemberSelect" required>
+                                    <option value="">-- เลือกสมาชิก --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>รายละเอียด/เหตุผล</label>
+                                <input type="text" id="scoreDetail" required>
+                            </div>
+                            <div class="form-group">
+                                <label>คะแนน</label>
+                                <input type="number" id="scoreValue" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>รูปภาพประกอบ</label>
+                            <div class="image-upload-area small"
+                                onclick="document.getElementById('scoreImage').click()">
+                                <div id="scoreImagePreview" class="image-preview">
+                                    <i class="fas fa-camera"></i>
+                                    <p>คลิกเพื่อเลือกรูปภาพ</p>
+                                </div>
+                            </div>
+                            <input type="file" id="scoreImage" accept="image/*" style="display:none"
+                                onchange="previewScoreImage(this)">
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i> ส่งคำขอเพิ่มคะแนน
+                        </button>
+                    </form>
+                </div>
+                <div class="user-list-container">
+                    <h4><i class="fas fa-list"></i> รายการคะแนน</h4>
+                    <table class="user-table" id="scoreTable">
+                        <thead>
+                            <tr>
+                                <th>ที่</th>
+                                <th>ชื่อสมาชิก</th>
+                                <th>รายละเอียด</th>
+                                <th>คะแนน</th>
+                                <th>วันที่</th>
+                                <th>การจัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scoreBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Members Section -->
+            <div id="adminMembersSection" class="admin-section hidden">
+                <button class="section-back-btn" onclick="backToAdminMenu()">
+                    <i class="fas fa-arrow-left"></i> กลับเมนูหลัก
+                </button>
+                <h3><i class="fas fa-user-graduate"></i> จัดการสมาชิก</h3>
+                <div class="admin-form-container">
+                    <h4><i class="fas fa-user-plus"></i> เพิ่มสมาชิกใหม่</h4>
+                    <form id="addMemberForm" onsubmit="addMemberAdmin(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>ชื่อ-นามสกุล</label>
+                                <input type="text" id="adminMemberName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>รหัสประจำตัว</label>
+                                <input type="text" id="adminMemberId" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ชมรม</label>
+                                <input type="text" id="adminMemberClub">
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-plus"></i> เพิ่มสมาชิก
+                        </button>
+                    </form>
+                </div>
+                <div class="user-list-container">
+                    <h4><i class="fas fa-list"></i> รายชื่อสมาชิก</h4>
+                    <table class="user-table" id="adminMemberTable">
+                        <thead>
+                            <tr>
+                                <th>ที่</th>
+                                <th>ชื่อ-นามสกุล</th>
+                                <th>รหัส</th>
+                                <th>ชมรม</th>
+                                <th>การจัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminMemberBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Training Section -->
+            <div id="adminTrainingSection" class="admin-section hidden">
+                <button class="section-back-btn" onclick="backToAdminMenu()">
+                    <i class="fas fa-arrow-left"></i> กลับเมนูหลัก
+                </button>
+                <h3><i class="fas fa-calendar-check"></i> จัดการการฝึกซ้อม</h3>
+                <p class="section-desc">ฟีเจอร์นี้อยู่ระหว่างการพัฒนา</p>
+            </div>
+
+            <!-- Clubs Section -->
+            <div id="adminClubsSection" class="admin-section hidden">
+                <button class="section-back-btn" onclick="backToAdminMenu()">
+                    <i class="fas fa-arrow-left"></i> กลับเมนูหลัก
+                </button>
+                <h3><i class="fas fa-people-group"></i> จัดการชมรม</h3>
+                <div class="admin-form-container">
+                    <h4><i class="fas fa-plus-circle"></i> เพิ่มชมรมใหม่</h4>
+                    <form id="addClubForm" onsubmit="addClub(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>ชื่อชมรม</label>
+                                <input type="text" id="clubName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ผู้ดูแล</label>
+                                <input type="text" id="clubSupervisor" required>
+                            </div>
+                            <div class="form-group">
+                                <label>จำนวนสมาชิก</label>
+                                <input type="number" id="clubMembers" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>คำอธิบาย</label>
+                            <input type="text" id="clubDescription">
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-plus"></i> เพิ่มชมรม
+                        </button>
+                    </form>
+                </div>
+                <div class="user-list-container">
+                    <h4><i class="fas fa-list"></i> รายชื่อชมรม</h4>
+                    <table class="user-table" id="adminClubTable">
+                        <thead>
+                            <tr>
+                                <th>ที่</th>
+                                <th>ชื่อชมรม</th>
+                                <th>ผู้ดูแล</th>
+                                <th>สมาชิก</th>
+                                <th>การจัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminClubBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Director Assignment Section -->
+            <div id="adminDirectorSection" class="admin-section hidden">
+                <button class="section-back-btn" onclick="backToAdminMenu()">
+                    <i class="fas fa-arrow-left"></i> กลับเมนูหลัก
+                </button>
+                <h3><i class="fas fa-user-tie"></i> แต่งตั้งผู้อำนวยการ</h3>
+                <div class="director-current">
+                    <h4>ผู้อำนวยการปัจจุบัน</h4>
+                    <div id="currentDirectorDisplay" class="current-director-card">
+                        <i class="fas fa-user-tie"></i>
+                        <span>ยังไม่ได้แต่งตั้ง</span>
+                    </div>
+                </div>
+                <div class="admin-form-container">
+                    <h4><i class="fas fa-crown"></i> เลือกผู้อำนวยการ</h4>
+                    <form id="assignDirectorForm" onsubmit="assignDirector(event)">
+                        <div class="form-group">
+                            <label>เลือกจากบุคคลภายใน</label>
+                            <select id="directorSelect" required>
+                                <option value="">-- เลือกบุคคล --</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-crown"></i> แต่งตั้งผู้อำนวยการ
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Profile Management Section -->
+            <div id="adminProfilesSection" class="admin-section hidden">
+                <button class="section-back-btn" onclick="backToAdminMenu()">
+                    <i class="fas fa-arrow-left"></i> กลับเมนูหลัก
+                </button>
+                <h3><i class="fas fa-id-card"></i> จัดการโปรไฟล์ผู้ใช้</h3>
+
+                <div class="admin-form-container">
+                    <h4><i class="fas fa-user-edit"></i> เลือกผู้ใช้ที่ต้องการแก้ไข</h4>
+                    <div class="form-group">
+                        <label>เลือกผู้ใช้</label>
+                        <select id="adminProfileSelect" onchange="loadUserProfileForEdit()">
+                            <option value="">-- เลือกผู้ใช้ --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="adminProfileEditForm" class="admin-form-container hidden">
+                    <h4><i class="fas fa-edit"></i> แก้ไขข้อมูลโปรไฟล์</h4>
+                    <form id="adminEditProfileForm" onsubmit="saveAdminProfileEdit(event)">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> ชื่อ-นามสกุล</label>
+                            <input type="text" id="adminEditName" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-briefcase"></i> ตำแหน่ง</label>
+                            <input type="text" id="adminEditPosition" placeholder="เช่น ครู, นักเรียน, เจ้าหน้าที่">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-building"></i> แผนก/ฝ่าย</label>
+                            <input type="text" id="adminEditDepartment" placeholder="เช่น ฝ่ายวิชาการ, แผนกบริหาร">
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-save"></i> บันทึกการแก้ไข
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ DIRECTOR MODULE ============ -->
+    <div id="directorModule" class="screen module-screen">
+        <nav class="module-nav">
+            <button class="back-btn" onclick="backToDashboard()">
+                <i class="fas fa-home"></i> กลับหน้าหลัก
+            </button>
+            <div class="nav-spacer"></div>
+            <h2><i class="fas fa-user-tie"></i> ศูนย์ผู้อำนวยการ</h2>
+        </nav>
+        <div class="module-content">
+            <div class="director-menu-grid">
+                <div class="director-menu-card" onclick="openDirectorSection('pending')">
+                    <div class="director-menu-icon pending-icon">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                    <h3>รอการอนุมัติคะแนน</h3>
+                    <p>พิจารณาคำขอเพิ่ม/หักคะแนน</p>
+                    <span id="pendingBadge" class="badge">0</span>
+                </div>
+                <div class="director-menu-card" onclick="openDirectorSection('appeals')">
+                    <div class="director-menu-icon appeals-icon">
+                        <i class="fas fa-hand-paper"></i>
+                    </div>
+                    <h3>คำขอร้องคะแนนคืน</h3>
+                    <p>พิจารณาคำร้องจากผู้ใช้</p>
+                    <span id="appealsBadge" class="badge">0</span>
+                </div>
+                <div class="director-menu-card" onclick="openDirectorSection('confirm')">
+                    <div class="director-menu-icon confirm-icon">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                    <h3>ยืนยันการคืนคะแนน</h3>
+                    <p>ตรวจสอบและคืนคะแนน</p>
+                    <span id="confirmBadge" class="badge">0</span>
+                </div>
+            </div>
+
+            <!-- Pending Score Approvals -->
+            <div id="directorPendingSection" class="hidden">
+                <button class="section-back-btn" onclick="backToDirectorMenu()">
+                    <i class="fas fa-arrow-left"></i> กลับเมนู
+                </button>
+                <h3><i class="fas fa-hourglass-half"></i> รอการอนุมัติคะแนน</h3>
+                <table class="director-table" id="pendingScoreTable">
+                    <thead>
+                        <tr>
+                            <th>วันที่</th>
+                            <th>เวลา</th>
+                            <th>สมาชิก</th>
+                            <th>ประเภท</th>
+                            <th>คะแนน</th>
+                            <th>เหตุผล</th>
+                            <th>รูป</th>
+                            <th>การดำเนินการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendingScoreBody"></tbody>
+                </table>
+            </div>
+
+            <!-- Appeal Requests -->
+            <div id="directorAppealsSection" class="hidden">
+                <button class="section-back-btn" onclick="backToDirectorMenu()">
+                    <i class="fas fa-arrow-left"></i> กลับเมนู
+                </button>
+                <h3><i class="fas fa-hand-paper"></i> คำขอร้องคะแนนคืน</h3>
+                <table class="director-table" id="appealsTable">
+                    <thead>
+                        <tr>
+                            <th>วันที่</th>
+                            <th>ผู้ขอ</th>
+                            <th>รายการที่ขอคืน</th>
+                            <th>เหตุผล</th>
+                            <th>การดำเนินการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appealsBody"></tbody>
+                </table>
+            </div>
+
+            <!-- Confirm Returns -->
+            <div id="directorConfirmSection" class="hidden">
+                <button class="section-back-btn" onclick="backToDirectorMenu()">
+                    <i class="fas fa-arrow-left"></i> กลับเมนู
+                </button>
+                <h3><i class="fas fa-check-double"></i> ยืนยันการคืนคะแนน</h3>
+                <table class="director-table" id="confirmTable">
+                    <thead>
+                        <tr>
+                            <th>วันที่</th>
+                            <th>ผู้ขอ</th>
+                            <th>สถานะงาน</th>
+                            <th>หลักฐาน</th>
+                            <th>การดำเนินการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="confirmBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ SCORE APPEAL MODULE (for all users) ============ -->
+    <div id="appealModule" class="screen module-screen">
+        <nav class="module-nav">
+            <button class="back-btn" onclick="backToDashboard()">
+                <i class="fas fa-home"></i> กลับหน้าหลัก
+            </button>
+            <div class="nav-spacer"></div>
+            <h2>ร้องขอคะแนนคืน</h2>
+        </nav>
+        <div class="module-content">
+            <!-- Appeal Menu -->
+            <div id="appealMenu">
+                <div class="appeal-menu-grid">
+                    <div class="appeal-menu-card" onclick="showAppealForm()">
+                        <div class="appeal-menu-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <h3>ร้องขอใหม่</h3>
+                        <p>ส่งคำร้องขอคืนคะแนน</p>
+                    </div>
+                    <div class="appeal-menu-card" onclick="showAppealStatus()">
+                        <div class="appeal-menu-icon status-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3>สถานะคำร้อง</h3>
+                        <p>ติดตามคำร้องของคุณ</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appeal Form Section -->
+            <div id="appealFormSection" class="hidden">
+                <button class="section-back-btn" onclick="backToAppealMenu()">
+                    <i class="fas fa-arrow-left"></i> กลับเมนู
+                </button>
+                <h3><i class="fas fa-file-alt"></i> ร้องขอคะแนนคืน</h3>
+                <div class="appeal-violations">
+                    <h4>คะแนนที่ถูกหัก (เลือกรายการที่ต้องการขอคืน)</h4>
+                    <table class="appeal-table" id="userViolationsTable">
+                        <thead>
+                            <tr>
+                                <th>เลือก</th>
+                                <th>วันที่</th>
+                                <th>รายละเอียด</th>
+                                <th>คะแนน</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userViolationsBody"></tbody>
+                    </table>
+                </div>
+                <div class="appeal-form-container">
+                    <form id="submitAppealForm" onsubmit="submitAppeal(event)">
+                        <div class="auto-datetime appeal-datetime">
+                            <i class="fas fa-calendar"></i>
+                            <span id="appealDate"></span>
+                            <span id="appealTime"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>เหตุผลในการขอคืน</label>
+                            <textarea id="appealReason" rows="3" required
+                                placeholder="ระบุเหตุผลว่าทำไมควรได้คะแนนคืน"></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i> ส่งคำร้อง
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Appeal Status Section -->
+            <div id="appealStatusSection" class="hidden">
+                <button class="section-back-btn" onclick="backToAppealMenu()">
+                    <i class="fas fa-arrow-left"></i> กลับเมนู
+                </button>
+                <h3><i class="fas fa-list-alt"></i> สถานะคำร้องของคุณ</h3>
+                <table class="appeal-table" id="myAppealsTable">
+                    <thead>
+                        <tr>
+                            <th>วันที่</th>
+                            <th>รายการ</th>
+                            <th>สถานะ</th>
+                            <th>การดำเนินการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="myAppealsBody"></tbody>
+                </table>
+            </div>
+
+            <!-- Task Completion Section -->
+            <div id="taskCompletionSection" class="hidden">
+                <button class="section-back-btn" onclick="backToAppealStatus()">
+                    <i class="fas fa-arrow-left"></i> กลับ
+                </button>
+                <h3><i class="fas fa-tasks"></i> งานที่ต้องทำ</h3>
+                <div class="task-detail-card" id="taskDetailCard">
+                    <!-- Dynamic content -->
+                </div>
+                <div class="task-completion-form">
+                    <form id="completeTaskForm" onsubmit="submitTaskCompletion(event)">
+                        <div class="form-group">
+                            <label>รูปภาพหลักฐาน</label>
+                            <div class="image-upload-area" onclick="document.getElementById('taskImage').click()">
+                                <div id="taskImagePreview" class="image-preview">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>คลิกเพื่อเลือกรูปภาพ</p>
+                                </div>
+                            </div>
+                            <input type="file" id="taskImage" accept="image/*" style="display:none"
+                                onchange="previewTaskImage(this)">
+                        </div>
+                        <div class="form-group">
+                            <label>หมายเหตุ</label>
+                            <textarea id="taskNote" rows="2" placeholder="หมายเหตุเพิ่มเติม (ถ้ามี)"></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-check"></i> ส่งหลักฐาน
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MODALS ============ -->
+
+    <!-- Change Password Modal -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-key"></i> เปลี่ยนรหัสผ่าน</h3>
+                <button class="close-btn" onclick="closeModal('passwordModal')">&times;</button>
+            </div>
+            <form id="changePasswordForm" onsubmit="changePassword(event)">
+                <div class="form-group">
+                    <label>รหัสผ่านเดิม</label>
+                    <input type="password" id="oldPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>รหัสผ่านใหม่</label>
+                    <input type="password" id="newPasswordInput" required>
+                </div>
+                <div class="form-group">
+                    <label>ยืนยันรหัสผ่านใหม่</label>
+                    <input type="password" id="confirmPassword" required>
+                </div>
+                <div id="passwordError" class="error-message hidden">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span></span>
+                </div>
+                <div id="passwordSuccess" class="success-message hidden">
+                    <i class="fas fa-check-circle"></i>
+                    <span>เปลี่ยนรหัสผ่านสำเร็จ!</span>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-save"></i> บันทึกรหัสผ่านใหม่
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
